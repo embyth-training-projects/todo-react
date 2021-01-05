@@ -8,8 +8,47 @@ import TodoList from '../todo-list';
 import './app.css';
 
 export default class App extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      todoData: [
+        {
+          textContent: `Drink Coffee`,
+          important: false,
+          id: 1,
+        },
+        {
+          textContent: `Build React App`,
+          important: true,
+          id: 2,
+        },
+        {
+          textContent: `Have a Lunch`,
+          important: false,
+          id: 3,
+        },
+      ]
+    };
+
+    this.deleteListItemHandler = this.deleteListItemHandler.bind(this);
+  }
+
+  deleteListItemHandler(id) {
+    this.setState(({todoData}) => {
+      const index = todoData.findIndex((item) => item.id === id);
+
+      return {
+        todoData: [
+          ...todoData.slice(0, index),
+          ...todoData.slice(index + 1)
+        ]
+      }
+    })
+  }
+
   render() {
-    const { data } = this.props;
+    const { todoData } = this.state;
 
     return (
       <div className='todo-app'>
@@ -18,7 +57,7 @@ export default class App extends Component {
           <SearchPanel />
           <StatusFilter />
         </div>
-        <TodoList todos={data} />
+        <TodoList todos={todoData} onDeleteButtonClick={this.deleteListItemHandler} />
       </div>
     );
   }

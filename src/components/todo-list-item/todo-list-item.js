@@ -32,7 +32,7 @@ export default class TodoListItem extends Component {
   }
 
   render() {
-    const { textContent } = this.props;
+    const { textContent, onDeleteButtonClick } = this.props;
     const { isImportant, isDone } = this.state;
 
     let classNames = `list-group-item todo-list-item ${isDone ? `done` : ``} ${isImportant ? `important` : ``}`;
@@ -46,7 +46,7 @@ export default class TodoListItem extends Component {
         <button type='button' className='btn btn-outline-success btn-sm float-right' onClick={this.onImportantButtonClick}>
           <i className='fa fa-exclamation' />
         </button>
-        <button type='button' className='btn btn-outline-danger btn-sm float-right'>
+        <button type='button' className='btn btn-outline-danger btn-sm float-right' onClick={onDeleteButtonClick}>
           <i className='fa fa-trash-o' />
         </button>
       </li>

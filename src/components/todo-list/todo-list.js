@@ -5,11 +5,13 @@ import './todo-list.css';
 
 export default class TodoList extends Component {
   render() {
-    const { todos } = this.props;
+    const { todos, onDeleteButtonClick } = this.props;
 
     const listItems = todos.map((item) => {
+      const {id, ...itemProps} = item;
+
       return (
-        <TodoListItem key={item.id} { ...item } />
+        <TodoListItem key={id} { ...itemProps } onDeleteButtonClick={() => onDeleteButtonClick(id)} />
       );
     });
 
