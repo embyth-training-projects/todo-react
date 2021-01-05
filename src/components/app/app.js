@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 
 import AppHeader from '../app-header';
 import SearchPanel from '../search-panel';
@@ -7,17 +7,19 @@ import TodoList from '../todo-list';
 
 import './app.css';
 
-const App = ({ data }) => {
-  return (
-    <div className='todo-app'>
-      <AppHeader toDo={1} done={3} />
-      <div className='top-panel d-flex'>
-        <SearchPanel />
-        <StatusFilter />
-      </div>
-      <TodoList todos={data} />
-    </div>
-  )
-}
+export default class App extends Component {
+  render() {
+    const { data } = this.props;
 
-export default App;
+    return (
+      <div className='todo-app'>
+        <AppHeader toDo={1} done={3} />
+        <div className='top-panel d-flex'>
+          <SearchPanel />
+          <StatusFilter />
+        </div>
+        <TodoList todos={data} />
+      </div>
+    );
+  }
+}
