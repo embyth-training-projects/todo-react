@@ -20,6 +20,7 @@ export default class App extends Component {
         this._createTodoItem(`Have a Lunch`),
       ],
       searchQuery: ``,
+      currentFilter: `all`,
     };
 
     this.deleteListItemHandler = this.deleteListItemHandler.bind(this);
@@ -27,6 +28,7 @@ export default class App extends Component {
     this.doneItemToggleHandler = this.doneItemToggleHandler.bind(this);
     this.importantItemToggleHandler = this.importantItemToggleHandler.bind(this);
     this.searchInputChangeHandler = this.searchInputChangeHandler.bind(this);
+    this.filterChangeHandler = this.filterChangeHandler.bind(this);
   }
 
   _createTodoItem(textContent) {
@@ -62,8 +64,25 @@ export default class App extends Component {
     return items.filter((item) => item.textContent.toLowerCase().indexOf(searchQuery.toLowerCase()) > -1);
   }
 
+  _filterItems(items, filter) {
+    switch (filter) {
+      case `all`:
+        return items;
+      case `active`:
+        return items.filter((item) => !item.isDone);
+      case `done`:
+        return items.filter((item) => item.isDone);
+      default:
+        return items;
+    }
+  }
+
   searchInputChangeHandler(searchQuery) {
     this.setState({searchQuery});
+  }
+
+  filterChangeHandler(filter) {
+    this.setState({currentFilter: filter});
   }
 
   doneItemToggleHandler(id) {
@@ -71,7 +90,7 @@ export default class App extends Component {
       return {
         todoData: this._toggleProperty(todoData, id, `isDone`)
       }
-    })
+    });
   }
 
   importantItemToggleHandler(id) {
@@ -79,7 +98,7 @@ export default class App extends Component {
       return {
         todoData: this._toggleProperty(todoData, id, `isImportant`)
       }
-    })
+    });
   }
 
   deleteListItemHandler(id) {
@@ -92,7 +111,7 @@ export default class App extends Component {
           ...todoData.slice(index + 1)
         ]
       }
-    })
+    });
   }
 
   addListItemHandler(text) {
@@ -103,23 +122,23 @@ export default class App extends Component {
           this._createTodoItem(text)
         ]
       }
-    })
+    });
   }
 
   render() {
-    const { todoData, searchQuery } = this.state;
+    const { todoData, searchQuery, currentFilter } = this.state;
 
     const doneAmount = todoData.filter((item) => item.isDone).length;
     const todoAmount = todoData.length - doneAmount;
 
-    const visibleItems = this._searchItems(todoData, searchQuery);
+    const visibleItems = this._filterItems(this._searchItems(todoData, searchQuery), currentFilter);
 
     return (
       <div className='todo-app'>
         <AppHeader toDo={todoAmount} done={doneAmount} />
         <div className='top-panel d-flex'>
           <SearchPanel onSearchInputChange={this.searchInputChangeHandler} />
-          <StatusFilter />
+          <StatusFilter filter={currentFilter} onFilterChange={this.filterChangeHandler} />
         </div>
         <TodoList
           todos={visibleItems}
