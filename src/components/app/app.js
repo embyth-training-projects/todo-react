@@ -4,6 +4,7 @@ import AppHeader from '../app-header';
 import SearchPanel from '../search-panel';
 import StatusFilter from '../status-filter';
 import TodoList from '../todo-list';
+import AddItemForm from '../add-item-form';
 
 import './app.css';
 
@@ -11,6 +12,7 @@ export default class App extends Component {
   constructor() {
     super();
 
+    this._maxId = 10;
     this.state = {
       todoData: [
         {
@@ -32,6 +34,7 @@ export default class App extends Component {
     };
 
     this.deleteListItemHandler = this.deleteListItemHandler.bind(this);
+    this.addListItemHandler = this.addListItemHandler.bind(this);
   }
 
   deleteListItemHandler(id) {
@@ -42,6 +45,23 @@ export default class App extends Component {
         todoData: [
           ...todoData.slice(0, index),
           ...todoData.slice(index + 1)
+        ]
+      }
+    })
+  }
+
+  addListItemHandler(text) {
+    const newItem = {
+      textContent: text,
+      important: false,
+      id: this._maxId++,
+    }
+
+    this.setState(({todoData}) => {
+      return {
+        todoData: [
+          ...todoData,
+          newItem
         ]
       }
     })
@@ -58,6 +78,7 @@ export default class App extends Component {
           <StatusFilter />
         </div>
         <TodoList todos={todoData} onDeleteButtonClick={this.deleteListItemHandler} />
+        <AddItemForm onAddButtonClick={this.addListItemHandler} />
       </div>
     );
   }
