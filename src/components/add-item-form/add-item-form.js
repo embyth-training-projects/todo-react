@@ -25,7 +25,7 @@ export default class AddItemForm extends Component {
 
     const {textContent} = this.state;
 
-    if (textContent === ``) {
+    if (textContent.length === 0) {
       return;
     }
 

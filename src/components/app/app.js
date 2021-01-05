@@ -18,13 +18,15 @@ export default class App extends Component {
         this._createTodoItem(`Drink Coffee`),
         this._createTodoItem(`Build React App`),
         this._createTodoItem(`Have a Lunch`),
-      ]
+      ],
+      searchQuery: ``,
     };
 
     this.deleteListItemHandler = this.deleteListItemHandler.bind(this);
     this.addListItemHandler = this.addListItemHandler.bind(this);
     this.doneItemToggleHandler = this.doneItemToggleHandler.bind(this);
     this.importantItemToggleHandler = this.importantItemToggleHandler.bind(this);
+    this.searchInputChangeHandler = this.searchInputChangeHandler.bind(this);
   }
 
   _createTodoItem(textContent) {
@@ -50,6 +52,18 @@ export default class App extends Component {
       newItem,
       ...array.slice(index + 1)
     ];
+  }
+
+  _searchItems(items, searchQuery) {
+    if (searchQuery.length === 0) {
+      return items;
+    }
+
+    return items.filter((item) => item.textContent.toLowerCase().indexOf(searchQuery.toLowerCase()) > -1);
+  }
+
+  searchInputChangeHandler(searchQuery) {
+    this.setState({searchQuery});
   }
 
   doneItemToggleHandler(id) {
@@ -93,20 +107,22 @@ export default class App extends Component {
   }
 
   render() {
-    const { todoData } = this.state;
+    const { todoData, searchQuery } = this.state;
 
     const doneAmount = todoData.filter((item) => item.isDone).length;
     const todoAmount = todoData.length - doneAmount;
+
+    const visibleItems = this._searchItems(todoData, searchQuery);
 
     return (
       <div className='todo-app'>
         <AppHeader toDo={todoAmount} done={doneAmount} />
         <div className='top-panel d-flex'>
-          <SearchPanel />
+          <SearchPanel onSearchInputChange={this.searchInputChangeHandler} />
           <StatusFilter />
         </div>
         <TodoList
-          todos={todoData}
+          todos={visibleItems}
           onDeleteButtonClick={this.deleteListItemHandler}
           onDoneToggleClick={this.doneItemToggleHandler}
           onImportantToggleClick={this.importantItemToggleHandler}
