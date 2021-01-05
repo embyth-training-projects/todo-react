@@ -7,6 +7,10 @@
   margin: 3px;
 }
 
+.todo-list-item-label {
+  cursor: pointer;
+}
+
 .todo-list-item.done .todo-list-item-label {
   text-decoration: line-through;
 }

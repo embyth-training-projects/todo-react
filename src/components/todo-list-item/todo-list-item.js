@@ -3,21 +3,47 @@ import React, {Component} from 'react';
 import './todo-list-item.css';
 
 export default class TodoListItem extends Component {
-  render() {
-    const { textContent, important } = this.props;
+  constructor() {
+    super();
 
-    const itemStyle = {
-      color: important ? `steelblue` : `black`,
-      fontWeight: important ? `bold` : `normal`,
+    this.state = {
+      isImportant: false,
+      isDone: false,
     }
 
+    this.onItemLabelClick = this.onItemLabelClick.bind(this);
+    this.onImportantButtonClick = this.onImportantButtonClick.bind(this);
+  }
+
+  onItemLabelClick() {
+    this.setState(({isDone}) => {
+      return {
+        isDone: !isDone
+      }
+    });
+  }
+
+  onImportantButtonClick() {
+    this.setState(({isImportant}) => {
+      return {
+        isImportant: !isImportant
+      }
+    });
+  }
+
+  render() {
+    const { textContent } = this.props;
+    const { isImportant, isDone } = this.state;
+
+    let classNames = `list-group-item todo-list-item ${isDone ? `done` : ``} ${isImportant ? `important` : ``}`;
+
     return (
-      <li className='list-group-item todo-list-item'>
-        <span style={itemStyle} className='todo-list-item-label'>
+      <li className={classNames}>
+        <span className='todo-list-item-label' onClick={this.onItemLabelClick}>
           {textContent}
         </span>
 
-        <button type='button' className='btn btn-outline-success btn-sm float-right'>
+        <button type='button' className='btn btn-outline-success btn-sm float-right' onClick={this.onImportantButtonClick}>
           <i className='fa fa-exclamation' />
         </button>
         <button type='button' className='btn btn-outline-danger btn-sm float-right'>
